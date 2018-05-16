@@ -11,8 +11,12 @@ architectures: [amd64]
 apps:
   driver:
     command: bin/deviceQueryDrv
+    plugs:
+      - hardware-observe
   cuda-device-query:
     command: bin/deviceQuery
+    plugs:
+      - hardware-observe
 
 parts:
   device-query-drv:
