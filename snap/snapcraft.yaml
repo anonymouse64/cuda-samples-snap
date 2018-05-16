@@ -37,6 +37,8 @@ parts:
       cp deviceQuery $SNAPCRAFT_PART_INSTALL/bin/deviceQuery
   cuda-build-deps:
     plugin: nil
+    build-packages:
+      - wget
     override-build: |
       # download cuda installer
       wget -c \
