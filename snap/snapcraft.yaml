@@ -1,8 +1,8 @@
 name: cuda-device-query
 version: '0.1'
-summary: CUDA example snap
+summary: Query CUDA device information
 description: |
-  Do stuff with CUDA from inside snaps!
+  Query CUDA device information using a snap.
 
 grade: stable
 confinement: strict
@@ -36,7 +36,6 @@ parts:
       # install it into the library
       cp deviceQuery $SNAPCRAFT_PART_INSTALL/bin/deviceQuery
   cuda-build-deps:
-    # See 'snapcraft plugins'
     plugin: nil
     override-build: |
       # download cuda installer
