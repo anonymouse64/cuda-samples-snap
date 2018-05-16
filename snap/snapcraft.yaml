@@ -1,0 +1,73 @@
+name: cuda-device-query
+version: '0.1'
+summary: CUDA example snap
+description: |
+  Do stuff with CUDA from inside snaps!
+
+grade: stable
+confinement: strict
+
+apps:
+  driver:
+    command: bin/deviceQueryDrv
+  cuda-device-query:
+    command: bin/deviceQuery
+
+parts:
+  device-query-drv:
+    after: [cuda-build-deps]
+    plugin: nil
+    override-build: |
+      # build the deviceQuery executable
+      cd $SNAPCRAFT_STAGE/NVIDIA_CUDA-9.1_Samples/1_Utilities/deviceQueryDrv
+      make
+      mkdir -p $SNAPCRAFT_PART_INSTALL/bin
+      # install it into the library
+      cp deviceQueryDrv $SNAPCRAFT_PART_INSTALL/bin/deviceQueryDrv
+  device-query:
+    after: [cuda-build-deps]
+    plugin: nil
+    override-build: |
+      # build the deviceQuery executable
+      cd $SNAPCRAFT_STAGE/NVIDIA_CUDA-9.1_Samples/1_Utilities/deviceQuery
+      make
+      mkdir -p $SNAPCRAFT_PART_INSTALL/bin
+      # install it into the library
+      cp deviceQuery $SNAPCRAFT_PART_INSTALL/bin/deviceQuery
+  cuda-build-deps:
+    # See 'snapcraft plugins'
+    plugin: nil
+    override-build: |
+      # get rid of all current nvidia packages
+      # apt purge nvidia* -y -qq
+      # add the graphics drivers ppa
+      # add-apt-repository ppa:graphics-drivers/ppa -y 
+      # apt update
+      # apt install nvidia-390 -y -qq || true
+
+      # download cuda installer
+      wget -c \
+        -O cuda-repo-ubuntu1604-9-1-local_9.1.85-1_amd64.deb \
+        https://developer.nvidia.com/compute/cuda/9.1/Prod/local_installers/cuda-repo-ubuntu1604-9-1-local_9.1.85-1_amd64
+      # patch 1
+      wget -c \
+        -O cuda-repo-ubuntu1604-9-1-local-cublas-performance-update-1_1.0-1_amd64.deb \
+        https://developer.nvidia.com/compute/cuda/9.1/Prod/patches/1/cuda-repo-ubuntu1604-9-1-local-cublas-performance-update-1_1.0-1_amd64
+      # compiler patch 1
+      wget -c \
+        -O cuda-repo-ubuntu1604-9-1-local-compiler-update-1_1.0-1_amd64.deb \
+        https://developer.nvidia.com/compute/cuda/9.1/Prod/patches/2/cuda-repo-ubuntu1604-9-1-local-compiler-update-1_1.0-1_amd64
+      # patch 3
+      wget -c \
+        -O cuda-repo-ubuntu1604-9-1-local-cublas-performance-update-3_1.0-1_amd64.deb \
+        https://developer.nvidia.com/compute/cuda/9.1/Prod/patches/3/cuda-repo-ubuntu1604-9-1-local-cublas-performance-update-3_1.0-1_amd64
+      # install the cuda toolkit
+      dpkg -i cuda-repo-ubuntu1604-9-1-local_9.1.85-1_amd64.deb
+      sudo apt-key add /var/cuda-repo-9-1-local/*.pub
+      apt update
+      apt install cuda -y -qq || true
+      dpkg -i cuda-repo-ubuntu1604-9-1-local-cublas-performance-update-1_1.0-1_amd64.deb
+      dpkg -i cuda-repo-ubuntu1604-9-1-local-compiler-update-1_1.0-1_amd64.deb
+      dpkg -i cuda-repo-ubuntu1604-9-1-local-cublas-performance-update-3_1.0-1_amd64.deb
+      /usr/local/cuda-9.1/bin/cuda-install-samples-9.1.sh $SNAPCRAFT_STAGE
+
