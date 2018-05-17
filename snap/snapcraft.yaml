@@ -10,15 +10,25 @@ architectures: [amd64]
 
 apps:
   driver:
-    command: bin/deviceQueryDrv
+    command: bin/deviceQueryDrv-script.sh
     plugs:
+      - opengl
       - hardware-observe
+      - network-bind
   cuda-device-query:
-    command: bin/deviceQuery
+    command: bin/deviceQuery-script.sh
     plugs:
+      - opengl
       - hardware-observe
+      - network-bind
 
 parts:
+  scripts:
+    plugin: dump
+    stage:
+      - bin/deviceQueryDrv-script.sh
+      - bin/deviceQuery-script.sh
+    source: .
   device-query-drv:
     after: [cuda-build-deps]
     plugin: nil
