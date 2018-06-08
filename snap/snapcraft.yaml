@@ -1,4 +1,4 @@
-name: cuda-device-query
+name: cuda-samples
 version: '0.1'
 summary: Query CUDA device information
 description: |
@@ -9,48 +9,31 @@ confinement: strict
 architectures: [amd64]
 
 apps:
-  driver:
-    command: bin/deviceQueryDrv-script.sh
-    plugs:
-      - opengl
-      - hardware-observe
-      - network-bind
-  cuda-device-query:
-    command: bin/deviceQuery-script.sh
+  cuda-samples:
+    command: bin/run-cuda-sample.sh
     plugs:
       - opengl
       - hardware-observe
       - network-bind
 
+
 parts:
   scripts:
     plugin: dump
-    stage:
-      - bin/deviceQueryDrv-script.sh
-      - bin/deviceQuery-script.sh
     source: .
-  device-query-drv:
+    stage:
+      - bin/run-cuda-sample.sh
+  sample-programs:
     after: [cuda-build-deps]
-    plugin: nil
+    plugin: make
+    source: .
     override-build: |
-      # build the deviceQuery executable
-      cd $SNAPCRAFT_STAGE/NVIDIA_CUDA-9.1_Samples/1_Utilities/deviceQueryDrv
-      make
-      mkdir -p $SNAPCRAFT_PART_INSTALL/bin
-      # install it into the library
-      cp deviceQueryDrv $SNAPCRAFT_PART_INSTALL/bin/deviceQueryDrv
-  device-query:
-    after: [cuda-build-deps]
-    plugin: nil
-    override-build: |
-      # build the deviceQuery executable
-      cd $SNAPCRAFT_STAGE/NVIDIA_CUDA-9.1_Samples/1_Utilities/deviceQuery
-      make
-      mkdir -p $SNAPCRAFT_PART_INSTALL/bin
-      # install it into the library
-      cp deviceQuery $SNAPCRAFT_PART_INSTALL/bin/deviceQuery
+      ./build_all_cuda_examples.sh
   cuda-build-deps:
     plugin: nil
+    prime:
+      - usr/lib/x86_64-linux-gnu/
+      - usr/local/cuda-9.1/targets/x86_64-linux/lib
     build-packages:
       - wget
     override-build: |
@@ -78,5 +61,14 @@ parts:
       dpkg -i cuda-repo-ubuntu1604-9-1-local-cublas-performance-update-1_1.0-1_amd64.deb
       dpkg -i cuda-repo-ubuntu1604-9-1-local-compiler-update-1_1.0-1_amd64.deb
       dpkg -i cuda-repo-ubuntu1604-9-1-local-cublas-performance-update-3_1.0-1_amd64.deb
+      # make directories for libcuda installation
+      mkdir -p $SNAPCRAFT_PART_INSTALL/usr/lib/x86_64-linux-gnu
+      mkdir -p $SNAPCRAFT_PART_INSTALL/usr/local/cuda-9.1/targets/x86_64-linux/lib
+      # install libcuda to the snap
+      cp /usr/lib/x86_64-linux-gnu/libcuda.so.1 $SNAPCRAFT_PART_INSTALL/usr/lib/x86_64-linux-gnu/libcuda.so.1
+      cp /usr/lib/x86_64-linux-gnu/libcuda.so $SNAPCRAFT_PART_INSTALL/usr/lib/x86_64-linux-gnu/libcuda.so
+      cp /usr/local/cuda-9.1/targets/x86_64-linux/lib/libcudart.so.9.1 $SNAPCRAFT_PART_INSTALL/usr/local/cuda-9.1/targets/x86_64-linux/lib/libcudart.so.9.1
+      cp /usr/local/cuda-9.1/targets/x86_64-linux/lib/libcudart.so $SNAPCRAFT_PART_INSTALL/usr/local/cuda-9.1/targets/x86_64-linux/lib/libcudart.so
+      # stage the examples
       /usr/local/cuda-9.1/bin/cuda-install-samples-9.1.sh $SNAPCRAFT_STAGE
 

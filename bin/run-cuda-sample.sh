@@ -11,8 +11,24 @@ function ld_library_path_remove {
   LD_LIBRARY_PATH=${LD_LIBRARY_PATH/#"$1:"/} # delete any instance at the beginning
   LD_LIBRARY_PATH=${LD_LIBRARY_PATH/%":$1"/} # delete any instance in the at the end
 }
-ld_library_path_remove $SNAP/usr/lib/x86_64-linux-gnu
-NVIDIA_DRIVER_PATH=$(ls -d $SNAP/usr/lib/nvidia*)
-ld_library_path_remove $NVIDIA_DRIVER_PATH
+# ld_library_path_remove $SNAP/usr/lib/x86_64-linux-gnu
+# NVIDIA_DRIVER_PATH=$(ls -d $SNAP/usr/lib/nvidia*)
+# ld_library_path_remove $NVIDIA_DRIVER_PATH
 
-$SNAP/bin/deviceQuery
+function usage {
+  echo "cuda-samples [sample] [args...]"
+}
+
+# check if the first argument exists
+if [ $# -eq 0 ]; then 
+  usage
+  exit 0
+fi
+echo "trying to run $SNAP/bin/$1"
+if [ ! -f "$SNAP/bin/$1" ]; then
+  # run the first argument as the program to run with all the rest as the arguments
+  $SNAP/bin/"$1" "${@:2}"
+else 
+  echo "$1 doesn't isn't a cuda-example"
+  exit 1
+fi
