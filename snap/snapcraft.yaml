@@ -15,6 +15,7 @@ apps:
       - opengl
       - hardware-observe
       - network-bind
+      - x11
 
 
 parts:
