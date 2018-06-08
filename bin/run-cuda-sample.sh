@@ -24,8 +24,14 @@ if [ $# -eq 0 ]; then
   usage
   exit 0
 fi
-echo "trying to run $SNAP/bin/$1"
-if [ ! -f "$SNAP/bin/$1" ]; then
+
+# output all possible commands if the first argument is list-all
+if [ "$1" = "list-all" ]; then
+  ls -1 "$SNAP/bin" | grep -v "run-cuda-sample.sh"
+  exit 0
+fi
+
+if [ -f "$SNAP/bin/$1" ]; then
   # run the first argument as the program to run with all the rest as the arguments
   $SNAP/bin/"$1" "${@:2}"
 else 
