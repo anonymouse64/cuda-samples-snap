@@ -28,6 +28,8 @@ parts:
     after: [cuda-build-deps]
     plugin: make
     source: .
+    build-packages:
+      - mpich
     override-build: |
       ./build_all_cuda_examples.sh
   cuda-build-deps:
