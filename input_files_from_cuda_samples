@@ -1,0 +1,17 @@
+0_Simple/simpleTextureDrv/data/ref_rotated.pgm
+2_Graphics/marchingCubes/data/Bucky.raw
+3_Imaging/imageDenoising/data/portrait_noise.bmp
+3_Imaging/HSOpticalFlow/data/frame11.ppm
+3_Imaging/boxFilter/data/lenaRGB.ppm
+3_Imaging/bilateralFilter/data/nature_monte.bmp
+3_Imaging/HSOpticalFlow/data/frame10.ppm
+3_Imaging/bicubicTexture/data/lena_bw.pgm
+3_Imaging/recursiveGaussian/data/lena.ppm
+6_Advanced/segmentationTreeThrust/data/test.ppm
+7_CUDALibraries/cuSolverDn_LinearSolver/gr_900_900_crg.mtx
+7_CUDALibraries/cuSolverSp_LowlevelQR/lap2D_5pt_n100.mtx
+7_CUDALibraries/cuSolverSp_LowlevelQR/lap2D_5pt_n100.mtx
+common/data/Lena.pgm
+common/data/flower.ppm
+common/data/person.ppm
+common/data/sponge.ppm

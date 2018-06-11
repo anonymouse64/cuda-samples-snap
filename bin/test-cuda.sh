@@ -1,11 +1,35 @@
 #!/bin/bash
 
+# the following files are needed to be in the same directory:
+# - lena.pgm (FunctionPointers, SobelFilter)
+# - Lena.pgm (FilterBorderControlNPP, boxFilterNPP, cannyEdgeDetectorNPP, freeImageInteropNPP, histEqualizationNPP)
+# - frame10.ppm (HSOpticalFlow)
+# - frame11.ppm (HSOpticalFlow)
+# - lena_bw.pgm (bicubicTexture, simpleTexture, simpleSurfaceWrite)
+# - sponge.ppm (bindlessTexture)
+# - flower.ppm (bindlessTexture)
+# - person.ppm (bindlessTexture)
+# - nature_monte.bmp (bilateralFilter)
+# - lenaRGB.ppm (boxFilter)
+# - test.ppm (segmentationTreeThrust)
+# - lena.ppm (recursiveGaussian)
+# - gr_900_900_crg.mtx (cuSolverDn_LinearSolver)
+# - lap2D_5pt_n100.mtx (cuSolverSp_LinearSolver, cuSolverSp_LowlevelCholesky, cuSolverSp_LowlevelQR)
+# - portrait_noise.bmp (imageDenoising)
+# - Bucky.raw (marchingCubes, volumeRender, volumeFiltering, simpleTexture3D)
+
+pushd $SNAP/bin > /dev/null
+samples=$(find . -type f -maxdepth 1 | grep -v "run-cuda-sample.sh")
+popd > /dev/null
+
+endExit=0
+
+# go into the data directory to run all of the snaps, as that has all the example data files in it
+pushd $SNAP/data > /dev/null
+
 # run all commands
-for command in $(cuda-samples list-all); do
-    case "$command" in
-        marchingCubes|volumeRender|volumeFiltering|simpleTexture3D)
-            # needs Bucky.raw
-            ;;
+for sample in "$samples"; do
+    case "$sample" in
         threadMigration)
             # needs threadMigration_kernel64.ptx or threadMigration_kernel64.cubin
             ;;
@@ -14,6 +38,9 @@ for command in $(cuda-samples list-all); do
             ;;
         matrixMulDrv)
             # needs matrixMul_kernel64.ptx or matrixMul_kernel64.cubin
+            ;;
+        simpleTextureDrv)
+            # needs simpleTexture_kernel64.ptx or simpleTexture_kernel64.cubin
             ;;
         smokeParticles)
             # needs some "floor image file"
@@ -32,9 +59,6 @@ for command in $(cuda-samples list-all); do
         dct8x8|dxtc|stereoDisparity)
             # needs some sample image argument
             ;;
-        imageDenoising)
-            # needs portrait_noise.bmp
-            ;;
         simpleCUFFT_2d_MGPU|simpleCUFFT_MGPU|simpleP2P)
             # needs multiple GPU's to run :(
             ;;
@@ -42,28 +66,17 @@ for command in $(cuda-samples list-all); do
             # requires sm 7.0
             # my GTX 1050M current card is 6.1 :(
             ;;
-        simpleTextureDrv)
-            # needs simpleTexture_kernel64.ptx or simpleTexture_kernel64.cubin
-            ;;
         cudaDecodeGL)
             # segfault
             ;; 
-        cuSolverSp_LinearSolver|cuSolverSp_LowlevelCholesky|cuSolverSp_LowlevelQR)
-            # missing lap2D_5pt_n100.mtx
-            ;;
         cuSolverRf)
             # missing default input file ?
             ;;
-        cuSolverDn_LinearSolver)
-            # needs gr_900_900_crg.mtx
+        cuHook)
+            # some unknown error : cuHook sample failed (Didn't receive the allocation callback)
             ;;
-        # cuHook)
-        #     ;;
         clock_nvrtc|inlinePTX_nvrtc|matrixMul_nvrtc|BlackScholes_nvrtc|binomialOptions_nvrtc|quasirandomGenerator_nvrtc|simpleAssert_nvrtc|simpleAtomicIntrinsics_nvrtc|vectorAdd_nvrtc|simpleVoteIntrinsics_nvrtc|simpleTemplates_nvrtc)
             # all nvrtc examples fail
-            ;;
-        recursiveGaussian)
-            # needs lena.ppm
             ;;
         simpleIPC)
             # hangs ... 
@@ -74,32 +87,11 @@ for command in $(cuda-samples list-all); do
         StreamPriorities)
             # some error allocating memory on the cuda device
             ;;
-        FilterBorderControlNPP|boxFilterNPP|cannyEdgeDetectorNPP|freeImageInteropNPP|histEqualizationNPP)
-            # needs "Lena.pgm"
-            ;;
-        FunctionPointers|SobelFilter)
-            # needs "lena.pgm"
-            ;;
-        bilateralFilter)
-            # needs some file nature_monte.bmp
+        segmentationTreeThrust)
+            # needs test.ppm, but still fails for some reason
             ;;
         c++11_cuda)
             # needs an input text file
-            ;;
-        HSOpticalFlow)
-            # needs frame10.ppm
-            ;;
-        bicubicTexture|simpleTexture|simpleSurfaceWrite)
-            # needs lena_bw.pgm
-            ;;
-        bindlessTexture)
-            # needs flower.ppm
-            ;;
-        boxFilter)
-            # needs lenaRGB.ppm
-            ;;
-        segmentationTreeThrust)
-            # needs test.ppm
             ;;
         simpleAssert)
             # some assertion failed
@@ -108,13 +100,21 @@ for command in $(cuda-samples list-all); do
             # TODO: figure out appropriate arguments here
             ;;
         *)
-            echo "===== RUNNING $command ====="
-            out=$(cuda-samples $command)
+            echo "===== RUNNING $sample ====="
+            out=$($SNAP/bin/$sample 2>&1)
             res=$?
             if [ $res -ne 0 ]; then
-                echo "$command failed:"
+                echo "$sample failed:"
                 echo "$out"
+                endExit=$?
             fi
+            ;;
     esac
 done
 
+# exit the data directory
+popd > /dev/null
+
+# exit with either 0 if all passed, or the resultant exit code 
+# from the most recent failure
+exit $endExit
