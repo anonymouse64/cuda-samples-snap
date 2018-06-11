@@ -15,6 +15,7 @@ apps:
       - opengl
       - hardware-observe
       - network-bind
+      - home
       - x11
 
 
