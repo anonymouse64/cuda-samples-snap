@@ -29,8 +29,8 @@ for sampleType in $(ls -d *_*); do
                 ;;
             *)
                 pushd $sampleProg > /dev/null
-                # compile the sample program
-                make
+                # compile the sample program using specific GLPATH
+                GLPATH=/usr/lib make
                 # copy the sample program to the install directory for this sample
                 cp $sampleProg $SNAPCRAFT_PART_INSTALL/bin/$sampleType/$sampleProg
                 # make a symbolic link from the bin folder to the sample folder

@@ -31,6 +31,15 @@ parts:
     source: .
     build-packages:
       - mpich
+      - freeglut3-dev
+      - libx11-dev
+      - libxmu-dev
+      - libxi-dev
+      - libgl1-mesa-glx
+      - libglu1-mesa
+      - libglu1-mesa-dev
+      - libglfw3-dev
+      - libgles2-mesa-dev
     override-build: |
       ./build_all_cuda_examples.sh
   cuda-build-deps:
