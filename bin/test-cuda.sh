@@ -19,7 +19,7 @@
 # - Bucky.raw (marchingCubes, volumeRender, volumeFiltering, simpleTexture3D)
 
 pushd $SNAP/bin > /dev/null
-samples=$(find . -type f -maxdepth 1 | grep -v "run-cuda-sample.sh")
+samples=$(find -L . -maxdepth 1 -type f | grep -v "run-cuda-sample.sh")
 popd > /dev/null
 
 endExit=0

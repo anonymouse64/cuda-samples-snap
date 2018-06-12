@@ -31,7 +31,7 @@ case "$1" in
   list-all)
     # output all of the sample executables themselves
     pushd "$SNAP/bin" > /dev/null
-    find . -maxdepth 1 -type f | sed --expression='s/^.\///g' | grep -v "run-cuda-sample.sh"
+    find -L . -maxdepth 1 -type f | sed --expression='s/^.\///g' | grep -v "run-cuda-sample.sh"
     popd > /dev/null
     exit 0
     ;;
