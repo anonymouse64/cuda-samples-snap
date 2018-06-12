@@ -1,11 +1,13 @@
 #!/bin/bash -e
 
+files=$(cat input_files_from_cuda_samples)
+
 # assumes that the nvidia examples have been put into $SNAPCRAFT_STAGE
 cd $SNAPCRAFT_STAGE/NVIDIA_CUDA-9.1_Samples
 
 # handle any artifacts needed for individual targets
 mkdir -p $SNAPCRAFT_PART_INSTALL/data/
-for dataFile in $(cat input_files_from_cuda_samples); do
+for dataFile in "$files"; do
     cp $dataFile $SNAPCRAFT_PART_INSTALL/data/
 done
 
