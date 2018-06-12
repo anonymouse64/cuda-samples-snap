@@ -18,9 +18,7 @@
 # - portrait_noise.bmp (imageDenoising)
 # - Bucky.raw (marchingCubes, volumeRender, volumeFiltering, simpleTexture3D)
 
-pushd $SNAP/bin > /dev/null
-samples=$(find -L . -maxdepth 1 -type f | grep -v "run-cuda-sample.sh")
-popd > /dev/null
+samples=$(find -L "$SNAP/bin" -maxdepth 1 -type f | grep -v "run-cuda-sample.sh" | grep -v "test-cuda.sh")
 
 endExit=0
 
@@ -28,7 +26,7 @@ endExit=0
 pushd "$SNAP/data" > /dev/null || exit 1
 
 # run all commands
-for sample in "$samples"; do
+while read -r sample; do
     case "$sample" in
         threadMigration)
             # needs threadMigration_kernel64.ptx or threadMigration_kernel64.cubin
@@ -101,7 +99,7 @@ for sample in "$samples"; do
             ;;
         *)
             echo "===== RUNNING $sample ====="
-            out=$($SNAP/bin/$sample 2>&1)
+            out=$("$sample" 2>&1)
             res=$?
             if [ $res -ne 0 ]; then
                 echo "$sample failed:"
@@ -110,7 +108,7 @@ for sample in "$samples"; do
             fi
             ;;
     esac
-done
+done <<< "$samples"
 
 # exit the data directory
 popd > /dev/null || exit 1
