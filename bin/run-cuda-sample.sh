@@ -52,7 +52,7 @@ case "$1" in
       # run the first argument as the program to run with all the rest as the arguments
       $SNAP/bin/"$1" "${@:2}"
     else 
-      echo "$1 doesn't isn't a cuda-example"
+      echo "$1 isn't a cuda-example"
       exit 1
     fi
 esac
