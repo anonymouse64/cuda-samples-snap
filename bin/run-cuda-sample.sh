@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -e
 
 # NOTE: WORKAROUND
 # snapcraft inadvertantly will bring in nvidia drivers from the build host
@@ -30,27 +30,27 @@ fi
 case "$1" in
   list-all)
     # output all of the sample executables themselves
-    pushd "$SNAP/bin" > /dev/null
+    pushd "$SNAP/bin" > /dev/null || exit 1
     find -L . -maxdepth 1 -type f | sed --expression='s/^.\///g' | grep -v "run-cuda-sample.sh"
-    popd > /dev/null
+    popd > /dev/null  || exit 1
     exit 0
     ;;
   list-types)
     # output all the sample types (which are organized into folders in $SNAP/bin)
-    pushd "$SNAP/bin" > /dev/null
+    pushd "$SNAP/bin" > /dev/null  || exit 1
     find . -maxdepth 1 -type d | sed --expression='s/^.\///g' | grep -v '^.$'
-    popd > /dev/null
+    popd > /dev/null || exit 1
     exit 0
     ;;
   test)
     # TODO: handle testing individual groups, like 0_Simple, etc.
-    $SNAP/bin/test-cuda.sh
+    "$SNAP/bin/test-cuda.sh"
     exit $?
     ;;
   *)
     if [ -f "$SNAP/bin/$1" ]; then
       # run the first argument as the program to run with all the rest as the arguments
-      $SNAP/bin/"$1" "${@:2}"
+      "$SNAP/bin/$1" "${@:2}"
     else 
       echo "$1 isn't a cuda-example"
       exit 1

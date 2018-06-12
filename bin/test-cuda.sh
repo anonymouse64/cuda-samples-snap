@@ -25,7 +25,7 @@ popd > /dev/null
 endExit=0
 
 # go into the data directory to run all of the snaps, as that has all the example data files in it
-pushd $SNAP/data > /dev/null
+pushd "$SNAP/data" > /dev/null || exit 1
 
 # run all commands
 for sample in "$samples"; do
@@ -113,7 +113,7 @@ for sample in "$samples"; do
 done
 
 # exit the data directory
-popd > /dev/null
+popd > /dev/null || exit 1
 
 # exit with either 0 if all passed, or the resultant exit code 
 # from the most recent failure
