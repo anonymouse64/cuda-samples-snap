@@ -34,7 +34,9 @@ for sampleType in $(ls -d *_*); do
                 # copy the sample program to the install directory for this sample
                 cp $sampleProg $SNAPCRAFT_PART_INSTALL/bin/$sampleType/$sampleProg
                 # make a symbolic link from the bin folder to the sample folder
-                ln -s $SNAPCRAFT_PART_INSTALL/bin/$sampleType/$sampleProg/$sampleProg $SNAPCRAFT_PART_INSTALL/bin/$sampleProg
+                pushd $SNAPCRAFT_PART_INSTALL/bin > /dev/null
+                ln -s $sampleType/$sampleProg $sampleProg
+                popd > /dev/null
                 popd > /dev/null
                 ;;
         esac
