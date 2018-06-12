@@ -16,9 +16,16 @@ for sampleType in $(ls -d *_*); do
     mkdir -p $SNAPCRAFT_PART_INSTALL/bin/$sampleType
     for sampleProg in $(ls -d *); do
         case "$sampleProg" in 
-            simpleGLES|simpleGLES_EGLOutput|simpleGLES_screen|EGLStream_CUDA_CrossGPU|EGLStreams_CUDA_Interop)
+            common)
+                # data directory - not a sample program
+                ;;
+            simpleGLES|simpleGLES_EGLOutput|simpleGLES_screen|EGLStream_CUDA_CrossGPU|EGLStreams_CUDA_Interop|fluidsGLES|nbody_opengles|nbody_screen)
                 # don't build these examples
-                # as they  aren't supported on all architecture's
+                # these examples require OpenGL ES, which we don't currently install
+                ;;
+            cudaDecodeGL)
+                # this sample is written poorly and needs to have the libraries moved around as it looks in the wrong place
+                #, so for now just don't compile it
                 ;;
             *)
                 pushd $sampleProg > /dev/null
