@@ -13,6 +13,7 @@ apps:
     command: bin/run-cuda-sample.sh
     plugs:
       - opengl
+      - cuda-support
       - hardware-observe
       - network-bind
       - home
