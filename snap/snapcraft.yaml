@@ -24,7 +24,7 @@ parts:
     plugin: dump
     source: .
     stage:
-      - bin/run-cuda-sample.sh
+      - bin/*
   sample-programs:
     after: [cuda-build-deps]
     plugin: make
