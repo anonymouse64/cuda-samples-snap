@@ -27,7 +27,8 @@ pushd "$SNAP/data" > /dev/null || exit 1
 
 # run all commands
 while read -r sample; do
-    case "$sample" in
+    sampleName=$(basename -- "$sample")
+    case "$sampleName" in
         threadMigration)
             # needs threadMigration_kernel64.ptx or threadMigration_kernel64.cubin
             ;;
@@ -98,11 +99,11 @@ while read -r sample; do
             # TODO: figure out appropriate arguments here
             ;;
         *)
-            echo "===== RUNNING $sample ====="
+            echo "===== RUNNING $sampleName ====="
             out=$("$sample" 2>&1)
             res=$?
             if [ $res -ne 0 ]; then
-                echo "$sample failed:"
+                echo "$sampleName failed:"
                 echo "$out"
                 endExit=$?
             fi
