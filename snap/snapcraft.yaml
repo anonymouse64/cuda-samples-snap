@@ -29,8 +29,7 @@ parts:
     after: [cuda-build-deps]
     plugin: make
     source: .
-    build-packages:
-      - mpich
+    stage-packages:
       - freeglut3-dev
       - libx11-dev
       - libxmu-dev
@@ -40,6 +39,8 @@ parts:
       - libglu1-mesa-dev
       - libglfw3-dev
       - libgles2-mesa-dev
+    build-packages:
+      - mpich
     override-build: |
       ./build_all_cuda_examples.sh
   cuda-build-deps:
