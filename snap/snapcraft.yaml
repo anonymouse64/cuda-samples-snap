@@ -40,8 +40,10 @@ parts:
       - libglu1-mesa-dev
       - libglfw3-dev
       - libgles2-mesa-dev
-    build-packages:
       - mpich
+    build-packages:
+      - libmpich-dev
+      - libopenmpi-dev
     override-build: |
       ./build_all_cuda_examples.sh
   cuda-build-deps:
