@@ -1,8 +1,8 @@
 name: cuda-samples
 version: '0.1'
-summary: Query CUDA device information
+summary: CUDA sample executables
 description: |
-  Query CUDA device information using a snap.
+  Run CUDA example code using snaps. Most CUDA samples are supported. See https://github.com/anonymouse64/cuda-samples-snap for more information.
 
 grade: stable
 confinement: strict
