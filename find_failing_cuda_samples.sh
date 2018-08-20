@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# assumes that the nvidia examples have been put into $SNAPCRAFT_STAGE
+# assumes that the nvidia examples have been put into $HOME
 cd $HOME/NVIDIA_CUDA-9.1_Samples
 
 # only go into directories that match "*_*", i.e. like 0_Simple, 1_Utilities, etc.
