@@ -23,7 +23,12 @@ samples=$(find -L "$SNAP/bin" -maxdepth 1 -type f | grep -v "run-cuda-sample.sh"
 endExit=0
 
 # go into the data directory to run all of the snaps, as that has all the example data files in it
-pushd "$SNAP/data" > /dev/null || exit 1
+if [ ! -d "$SNAP_USER_DATA/data" ]; then
+    # then create that folder
+    cp -r "$SNAP/data" "$SNAP_USER_DATA/data"
+fi
+
+pushd "$SNAP_USER_DATA/data" > /dev/null || exit 1
 
 # run all commands
 while read -r sample; do

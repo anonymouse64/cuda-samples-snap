@@ -4,6 +4,7 @@
 3_Imaging/HSOpticalFlow/data/frame11.ppm
 3_Imaging/boxFilter/data/lenaRGB.ppm
 3_Imaging/bilateralFilter/data/nature_monte.bmp
+3_Imaging/SobelFilter/data/lena.pgm
 3_Imaging/HSOpticalFlow/data/frame10.ppm
 3_Imaging/bicubicTexture/data/lena_bw.pgm
 3_Imaging/recursiveGaussian/data/lena.ppm
