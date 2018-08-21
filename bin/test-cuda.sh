@@ -103,6 +103,9 @@ while read -r sample; do
         BiCGStab)
             # TODO: figure out appropriate arguments here
             ;;
+        simpleMPI)
+            # fails with An error occurred in MPI_Init on a NULL communicator
+            ;;
         *)
             echo "===== RUNNING $sampleName ====="
             out=$("$sample" 2>&1)
